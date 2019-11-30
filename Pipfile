@@ -6,6 +6,7 @@ verify_ssl = true
 [dev-packages]
 pep8 = "*"
 pylint = "*"
+pycodestyle = "*"
 
 [packages]
 numpy = "*"
