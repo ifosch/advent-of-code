@@ -4,7 +4,7 @@ filename = 'input.txt'
 
 
 def fr(i):
-    a = i / 3
+    a = i // 3
     b = a - 2
 
     if b > 0:

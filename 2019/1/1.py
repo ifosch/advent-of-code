@@ -9,7 +9,7 @@ with open(filename, 'r') as fp:
 
     for line in lines:
         i = int(line)
-        d = i / 3
+        d = i // 3
         e = d - 2
         s = s + e
 
