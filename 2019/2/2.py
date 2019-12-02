@@ -7,9 +7,14 @@ with open(filename, 'r') as fp:
 
 items = [int(v) for v in line.split(',')]
 
-def out(v, noun = 12, verb = 2):
-    v[1] = noun
-    v[2] = verb
+
+def process(v, noun=None, verb=None):
+    if noun:
+        v[1] = noun
+
+    if verb:
+        v[2] = verb
+
     i = 0
     while i < len(v):
         c = v[i]
@@ -27,10 +32,11 @@ def out(v, noun = 12, verb = 2):
 
     return v[0]
 
+
 target = 19690720
 
 for n in range(0, 100):
     for v in range(0, 100):
-        o = out(items.copy(), n, v)
+        o = process(list(items), n, v)
         if o == target:
             print((n * 100)+v)
