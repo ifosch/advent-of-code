@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
+# Open Single Line File and iterate (split by comma)
 filename = 'input.txt'
-
 with open(filename, 'r') as fp:
     line = fp.readline().strip()
 
-items = [int(v) for v in line.split(',')]
+items = [int(item) for item in line.split(',')]
 
 
 def process(v, noun=None, verb=None):
