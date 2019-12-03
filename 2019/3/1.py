@@ -1,36 +1,69 @@
 #!/usr/bin/env python
+# Open Single Line File and iterate (split by comma)
 
 filename = 'input.txt'
-
 with open(filename, 'r') as fp:
-    line = fp.readline().strip()
+    line1 = fp.readline().strip()
+    line2 = fp.readline().strip()
 
-items = [int(v) for v in line.split(',')]
+items1 = [item for item in line1.split(',')]
+items2 = [item for item in line2.split(',')]
 
+x = 0
+y = 0
+visited1 = set()
+for i1 in items1:
+    d = i1[0]
+    n = int(i1[1:])
+    if d == 'R':
+        for a in range(1, n+1):
+            x = x + 1
+            visited1.add((x, y))
+    elif d == 'U':
+        for a in range(1, n+1):
+            y = y - 1
+            visited1.add((x, y))
+    elif d == 'D':
+        for a in range(1, n+1):
+            y = y + 1
+            visited1.add((x, y))
+    elif d == 'L':
+        for a in range(1, n+1):
+            x = x - 1
+            visited1.add((x, y))
+    else:
+        raise
 
-def process(v, noun=None, verb=None):
-    if noun:
-        v[1] = noun
+x = 0
+y = 0
+visited2 = set()
+for i2 in items2:
+    d = i2[0]
+    n = int(i2[1:])
+    if d == 'R':
+        for a in range(1, n+1):
+            x = x + 1
+            visited2.add((x, y))
+    elif d == 'U':
+        for a in range(1, n+1):
+            y = y - 1
+            visited2.add((x, y))
+    elif d == 'D':
+        for a in range(1, n+1):
+            y = y + 1
+            visited2.add((x, y))
+    elif d == 'L':
+        for a in range(1, n+1):
+            x = x - 1
+            visited2.add((x, y))
+    else:
+        raise
 
-    if verb:
-        v[2] = verb
+both = visited1 & visited2
 
-    i = 0
-    while i < len(v):
-        c = v[i]
+ds = []
+for point in both:
+    a,b = point
+    ds.append(abs(a)+abs(b))
 
-        if c == 99:
-            break
-        elif c == 1:
-            v[v[i+3]] = v[v[i+1]] + v[v[i+2]]
-            i = i + 4
-        elif c == 2:
-            v[v[i+3]] = v[v[i+1]] * v[v[i+2]]
-            i = i + 4
-        else:
-            raise
-
-    return v[0]
-
-
-print(process(items, 12, 2))
+print(min(ds))
