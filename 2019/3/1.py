@@ -63,7 +63,7 @@ both = visited1 & visited2
 
 ds = []
 for point in both:
-    a,b = point
+    a, b = point
     ds.append(abs(a)+abs(b))
 
 print(min(ds))

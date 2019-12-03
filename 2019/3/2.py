@@ -21,29 +21,29 @@ for i1 in items1:
         for a in range(1, n+1):
             x = x + 1
             steps += 1
-            if (x,y) not in visited1:
-                sv1[(x,y)] = steps
+            if (x, y) not in visited1:
+                sv1[(x, y)] = steps
             visited1.add((x, y))
     elif d == 'U':
         for a in range(1, n+1):
             y = y - 1
             steps += 1
-            if (x,y) not in visited1:
-                sv1[(x,y)] = steps
+            if (x, y) not in visited1:
+                sv1[(x, y)] = steps
             visited1.add((x, y))
     elif d == 'D':
         for a in range(1, n+1):
             y = y + 1
             steps += 1
-            if (x,y) not in visited1:
-                sv1[(x,y)] = steps
+            if (x, y) not in visited1:
+                sv1[(x, y)] = steps
             visited1.add((x, y))
     elif d == 'L':
         for a in range(1, n+1):
             x = x - 1
             steps += 1
-            if (x,y) not in visited1:
-                sv1[(x,y)] = steps
+            if (x, y) not in visited1:
+                sv1[(x, y)] = steps
             visited1.add((x, y))
     else:
         raise
@@ -60,29 +60,29 @@ for i2 in items2:
         for a in range(1, n+1):
             x = x + 1
             steps += 1
-            if (x,y) not in visited2:
-                sv2[(x,y)] = steps
+            if (x, y) not in visited2:
+                sv2[(x, y)] = steps
             visited2.add((x, y))
     elif d == 'U':
         for a in range(1, n+1):
             y = y - 1
             steps += 1
-            if (x,y) not in visited2:
-                sv2[(x,y)] = steps
+            if (x, y) not in visited2:
+                sv2[(x, y)] = steps
             visited2.add((x, y))
     elif d == 'D':
         for a in range(1, n+1):
             y = y + 1
             steps += 1
-            if (x,y) not in visited2:
-                sv2[(x,y)] = steps
+            if (x, y) not in visited2:
+                sv2[(x, y)] = steps
             visited2.add((x, y))
     elif d == 'L':
         for a in range(1, n+1):
             x = x - 1
             steps += 1
-            if (x,y) not in visited2:
-                sv2[(x,y)] = steps
+            if (x, y) not in visited2:
+                sv2[(x, y)] = steps
             visited2.add((x, y))
     else:
         raise
