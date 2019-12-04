@@ -1,34 +1,25 @@
 #!/usr/bin/env python
 
-filename = 'input.txt'
-
-# Open Multiline File and iterate line by line
-filename = 'input.txt'
-with open(filename, 'r') as fp:
-    lines = (l.strip() for l in fp)
-
-    for line in lines:
-        i = int(line)
-        print(line, i)
-
-
 # Open Single Line File and iterate char by char
 filename = 'input.txt'
 with open(filename, 'r') as fp:
     line = fp.readline().strip()
 
-for char in line:
-    print(char)
+a , b = [i for i in line.split('-')]
 
-chars = [char for char in line]
+i = int(a) + 1
+total = 0
+while i <= int(b):
+    chars = str(i)
+    if len(chars) == len(set(chars)):
+        i += 1
+        continue
 
-# Open Single Line File and iterate (split by comma)
-filename = 'input.txt'
-with open(filename, 'r') as fp:
-    line = fp.readline().strip()
+    if not(list(chars) == sorted(chars)):
+        i += 1
+        continue
 
-for item in line.split(','):
-    print(item)
+    total += 1
+    i += 1
 
-items = [item for item in line.split(',')]
-items_num = [int(item) for item in line.split(',')]
+print(total)
