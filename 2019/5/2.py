@@ -20,8 +20,6 @@ def process(v, input):
             opcode = c % 100
             modes = [int(a) for a in str(c // 100)[::-1]]
 
-        #print(c, opcode, modes)
-
         if opcode == 99:
             break
         elif opcode == 1:
