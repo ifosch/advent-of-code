@@ -57,7 +57,7 @@ class Intcode(object):
     }
 
 
-a = Intcode(list(items))
-a.set_nounverb(12, 2)
-a.run()
-print(a.get_mempos(0))
+machine = Intcode(list(items))
+machine.set_nounverb(12, 2)
+machine.run()
+print(machine.get_mempos(0))
