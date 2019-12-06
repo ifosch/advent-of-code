@@ -8,35 +8,63 @@ with open(filename, 'r') as fp:
 items = [int(item) for item in line.split(',')]
 
 
-def process(v, noun=None, verb=None):
-    if noun:
-        v[1] = noun
+class Intcode(object):
+    def __init__(self, program):
+        self.mem = program
 
-    if verb:
-        v[2] = verb
+        self.ip = 0  # Instruction Pointer
+        self.halt = False
 
-    i = 0
-    while i < len(v):
-        c = v[i]
+    def step(self):
+        curr = self.mem[self.ip]
+        instr_name, operation, num_params = self.opcodes[curr]
+        params = [self.mem[self.ip + i + 1] for i in range(num_params)]
 
-        if c == 99:
-            break
-        elif c == 1:
-            v[v[i+3]] = v[v[i+1]] + v[v[i+2]]
-            i = i + 4
-        elif c == 2:
-            v[v[i+3]] = v[v[i+1]] * v[v[i+2]]
-            i = i + 4
-        else:
-            raise
+        operation(self, params)
 
-    return v[0]
+        if self.halt:
+            return False
+
+        self.ip += 1 + num_params
+
+        return True
+
+    def run(self):
+        while self.step():
+            pass
+
+    def set_nounverb(self, noun, verb):
+        self.mem[1] = noun
+        self.mem[2] = verb
+
+    def get_mempos(self, pos):
+        return self.mem[pos]
+
+    # Opcode Definition
+    def o_add(self, params):
+        self.mem[params[2]] = self.mem[params[0]] + self.mem[params[1]]
+
+    def o_mul(self, params):
+        self.mem[params[2]] = self.mem[params[0]] * self.mem[params[1]]
+
+    def o_exit(self, params):
+        self.halt = True
+
+    opcodes = {
+        1: ('ADD', o_add, 3),
+        2: ('MUL', o_mul, 3),
+        99: ('EXIT', o_exit, 0),
+    }
 
 
 target = 19690720
 
 for n in range(0, 100):
     for v in range(0, 100):
-        o = process(list(items), n, v)
-        if o == target:
+        machine = Intcode(list(items))
+        machine.set_nounverb(n, v)
+        machine.run()
+        output = machine.get_mempos(0)
+
+        if output == target:
             print((n * 100)+v)
