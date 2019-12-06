@@ -6,128 +6,120 @@ with open(filename, 'r') as fp:
 
 items = [int(item) for item in line.split(',')]
 
-def process(v, input):
-    outputs = []
 
-    i = 0
-    while i < len(v):
-        c = v[i]
+class Intcode(object):
+    def __init__(self, program, input=None):
+        self.mem = program
+        self.input = input
 
-        if c < 100:
-            opcode = c
-            modes = list()
+        self.outputs = []
+
+        self.ip = 0  # Instruction Pointer
+        self.halt = False
+        self.override_ip = None
+
+    def step(self):
+        curr = self.read(self.ip)
+
+        opcode = curr % 100
+        modes = curr // 100
+
+        instr_name, operation, num_params, ret_param = self.opcodes[opcode]
+
+        params = []
+        for i in range(num_params):
+            val = self.read(self.ip + i + 1)
+            if i != ret_param:
+                if modes % 10 == 0:
+                    val = self.read(val)
+
+            modes = modes // 10
+            params.append(val)
+
+        # print(instr_name, modes, num_params, params)
+
+        operation(self, *params)
+
+        if self.halt:
+            return False
+
+        if self.override_ip:
+            self.ip = self.override_ip
+            self.override_ip = None
         else:
-            opcode = c % 100
-            modes = [int(a) for a in str(c // 100)[::-1]]
+            self.ip += 1 + num_params
 
-        if opcode == 99:
-            break
-        elif opcode == 1:
-            if len(modes) >= 1 and modes[0]:
-                p1 = v[i+1]
-            else:
-                p1 = v[v[i+1]]
+        return True
 
-            if len(modes) >= 2 and modes[1]:
-                p2 = v[i+2]
-            else:
-                p2 = v[v[i+2]]
+    def run(self):
+        while self.step():
+            pass
 
-            v[v[i+3]] = p1 + p2
-            i = i + 4
-        elif opcode == 2:
-            if len(modes) >= 1 and modes[0]:
-                p1 = v[i+1]
-            else:
-                p1 = v[v[i+1]]
+    def set_nounverb(self, noun, verb):
+        self.write(1, noun)
+        self.write(2, verb)
 
-            if len(modes) >= 2 and modes[1]:
-                p2 = v[i+2]
-            else:
-                p2 = v[v[i+2]]
+    def write(self, addr, data):
+        self.mem[addr] = data
 
-            v[v[i+3]] = p1 * p2
-            i = i + 4
-        elif opcode == 3:
-            v[v[i+1]] = input
-            i = i + 2
-        elif opcode == 4:
-            if len(modes) >= 1 and modes[0]:
-                p1 = v[i+1]
-            else:
-                p1 = v[v[i+1]]
+    def read(self, addr):
+        return self.mem[addr]
 
-            outputs.append(p1)
-            i = i + 2
-        elif opcode == 5:
-            if len(modes) >= 1 and modes[0]:
-                p1 = v[i+1]
-            else:
-                p1 = v[v[i+1]]
+    def get_outputs(self):
+        return self.outputs
 
-            if len(modes) >= 2 and modes[1]:
-                p2 = v[i+2]
-            else:
-                p2 = v[v[i+2]]
+    # Opcode Definition
+    def o_add(self, a, b, c):
+        self.write(c, a + b)
 
-            if p1:
-                i = p2
-            else:
-                i = i + 3
-        elif opcode == 6:
-            if len(modes) >= 1 and modes[0]:
-                p1 = v[i+1]
-            else:
-                p1 = v[v[i+1]]
+    def o_mul(self, a, b, c):
+        self.write(c, a * b)
 
-            if len(modes) >= 2 and modes[1]:
-                p2 = v[i+2]
-            else:
-                p2 = v[v[i+2]]
-
-            if not p1:
-                i = p2
-            else:
-                i = i + 3
-        elif opcode == 7:
-            if len(modes) >= 1 and modes[0]:
-                p1 = v[i+1]
-            else:
-                p1 = v[v[i+1]]
-
-            if len(modes) >= 2 and modes[1]:
-                p2 = v[i+2]
-            else:
-                p2 = v[v[i+2]]
-            
-            if p1 < p2:
-                v[v[i+3]] = 1
-            else:
-                v[v[i+3]] = 0
-
-            i = i + 4
-        elif opcode == 8:
-            if len(modes) >= 1 and modes[0]:
-                p1 = v[i+1]
-            else:
-                p1 = v[v[i+1]]
-
-            if len(modes) >= 2 and modes[1]:
-                p2 = v[i+2]
-            else:
-                p2 = v[v[i+2]]
-            
-            if p1 == p2:
-                v[v[i+3]] = 1
-            else:
-                v[v[i+3]] = 0
-
-            i = i + 4
-        else:
-            print(c)
+    def o_in(self, a):
+        if self.input is None:
             raise
 
-    return outputs
+        self.write(a, self.input)
+
+    def o_out(self, a):
+        self.outputs.append(a)
+
+    def o_jump_if_true(self, a, b):
+        if a != 0:
+            self.override_ip = b
+
+    def o_jump_if_false(self, a, b):
+        if a == 0:
+            self.override_ip = b
+
+    def o_equals(self, a, b, c):
+        if a == b:
+            self.write(c, 1)
+        else:
+            self.write(c, 0)
+
+    def o_less_than(self, a, b, c):
+        if a < b:
+            self.write(c, 1)
+        else:
+            self.write(c, 0)
+
+    def o_exit(self):
+        self.halt = True
+
+    opcodes = {
+        1: ('ADD', o_add, 3, 2),
+        2: ('MUL', o_mul, 3, 2),
+        3: ('IN', o_in, 1, 0),
+        4: ('OUT', o_out, 1, None),
+        5: ('JMPT', o_jump_if_true, 2, None),
+        6: ('JMPF', o_jump_if_false, 2, None),
+        7: ('LT', o_less_than, 3, 2),
+        8: ('EQ', o_equals, 3, 2),
+        99: ('EXIT', o_exit, 0, None),
+    }
 
 
-print(process(items, 5))
+machine = Intcode(list(items), input=5)
+machine.run()
+print(machine.get_outputs())
