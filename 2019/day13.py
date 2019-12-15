@@ -10,37 +10,11 @@ except AocdError:
 
 
 def A():
-    s = 0
-    for line in data.splitlines():
-        i = int(line)
-        d = i // 3
-        e = d - 2
-        s = s + e
-
-    return s
+    pass
 
 
 def B():
-    s = 0
-
-    for line in data.splitlines():
-        i = int(line)
-        s = s + fr(i)
-
-    return s
-
-
-def fr(i):
-    a = i // 3
-    b = a - 2
-
-    if b > 0:
-        b += fr(b)
-
-    if b < 0:
-        return 0
-
-    return b
+    pass
 
 
 def print_solutions():

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # Open Single Line File and iterate (split by comma)
-filename = 'input.txt'
+filename = 'input-2.txt'
 with open(filename, 'r') as fp:
     line = fp.readline().strip()
 
