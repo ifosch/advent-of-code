@@ -11,6 +11,3 @@ pycodestyle = "*"
 [packages]
 numpy = "*"
 advent-of-code-data = "*"
-
-[requires]
-python_version = "3.7"
