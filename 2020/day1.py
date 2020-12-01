@@ -10,17 +10,41 @@ except AocdError:
 
 
 def A():
-    s = 0
+    nums = []
     for line in data.splitlines():
         i = int(line)
-        d = i // 3
-        e = d - 2
-        s = s + e
+        if i >= 2020:
+            continue
 
-    return s
+        if not len(nums):
+            nums.append(i)
+            continue
+
+        for n in nums:
+            if i + n == 2020:
+                return n*i
+
+        nums.append(i)
+
 
 def B():
-    return 0
+    nums = []
+    for line in data.splitlines():
+        i = int(line)
+        if i >= 2020:
+            continue
+
+        if len(nums) < 2:
+            nums.append(i)
+            continue
+
+        for x in nums:
+            for y in nums:
+                if i + x + y == 2020:
+                    return i * x * y
+
+        nums.append(i)
+
 
 def print_solutions():
     for part in ['A', 'B']:
