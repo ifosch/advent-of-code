@@ -10,40 +10,38 @@ except AocdError:
 
 
 def A():
-    nums = []
+    valid = 0
     for line in data.splitlines():
-        i = int(line)
-        if i >= 2020:
-            continue
+        tokens = line.split()
 
-        if not len(nums):
-            nums.append(i)
-            continue
+        min_r, max_r = map(int, tokens[0].split('-'))
+        ch = tokens[1].rstrip(":")
+        pw = tokens[2]
 
-        for n in nums:
-            if i + n == 2020:
-                return n*i
+        reps = 0
+        for e in pw:
+            if e == ch:
+                reps += 1
 
-        nums.append(i)
+        if reps >= min_r and reps <= max_r:
+            valid += 1
+
+    return valid
 
 
 def B():
-    nums = []
+    valid = 0
     for line in data.splitlines():
-        i = int(line)
-        if i >= 2020:
-            continue
+        tokens = line.split()
 
-        if len(nums) < 2:
-            nums.append(i)
-            continue
+        pos1, pos2 = map(int, tokens[0].split('-'))
+        ch = tokens[1].rstrip(":")
+        pw = tokens[2]
 
-        for x in nums:
-            for y in nums:
-                if i + x + y == 2020:
-                    return i * x * y
+        if (pw[pos1 - 1] == ch) ^ (pw[pos2 - 1] == ch):
+            valid += 1
 
-        nums.append(i)
+    return valid
 
 
 def print_solutions():
