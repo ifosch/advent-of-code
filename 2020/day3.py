@@ -17,10 +17,19 @@ def A():
         for c in line:
             row.append((c == '#'))
         rows.append(row)
-    
-    x = 0
+
+    x, y = 0, 0
     trees = 0
-    
+    dx, dy = 3, 1
+
+    while y < len(rows):
+        row = rows[y]
+        if(row[x % len(row)]):
+            trees += 1
+
+        x += dx
+        y += dy
+
     return(trees)
 
 
@@ -32,21 +41,18 @@ def B():
         for c in line:
             row.append((c == '#'))
         rows.append(row)
-    
+
     total = 1
 
-    slopes = [(1,1), (3,1), (5,1), (7,1), (1,2)]
+    slopes = [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
 
     for dx, dy in slopes:
         x, y = 0, 0
         trees = 0
-        print(dx, dy)
 
         while y < len(rows):
             row = rows[y]
-            l = len(row)
-            x = x % l
-            if(row[x]):
+            if(row[x % len(row)]):
                 trees += 1
 
             x += dx
@@ -56,10 +62,6 @@ def B():
 
     return total
 
-
-
-
-    return(total)
 
 def print_solutions():
     for part in ['A', 'B']:
